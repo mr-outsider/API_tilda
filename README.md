@@ -107,6 +107,9 @@ Si todo ha salidos bien, debemos de ser capaces de ver la base de datos **toor**
 
 > Sin embargo, como estamos utilizando contenedores, en lugar de localhost, debe ir el nombre del contenedor de la base de datos, quedando de la siguiente forma de acuerdo a nuestro contenedor: **"postgresql://toor:toor@db:5432/toor"**
 
+4. **Creación de tablas y populación de información**
+
+TODO: Generar un script para crear las tablas y cargar información de prueba.
 
 <h1 id="er">Creación del diagrama ER para la base de datos</h1>
 
@@ -136,7 +139,7 @@ Si todo ha salidos bien, debemos de ser capaces de ver la base de datos **toor**
 | **correo_electronico** | VARCHAR(100) | not null, unique |  |Correo de contacto oficial. |
 | **nombre_director** | VARCHAR(255) | not null |  |Nombre del director o responsable. |
 | **turno** | VARCHAR(20) | not null |  |Opciones: Matutino, Vespertino, Mixto. |
-| **estatus** | VARCHAR(20) | not null |  |Opciones: Activa, Suspendida, Cerrada. |
+| **estatus** | VARCHAR(20) | not null |  |Opciones: activa, suspendida, cerrada. |
 
 
 ### estudiantes
@@ -148,12 +151,12 @@ Si todo ha salidos bien, debemos de ser capaces de ver la base de datos **toor**
 | **apellido_paterno** | VARCHAR(100) | not null |  |Apellido paterno del estudiante. |
 | **apellido_materno** | VARCHAR(100) | not null |  |Apellido materno del estudiante. |
 | **fecha_nacimiento** | DATE | not null |  |Fecha de nacimiento del estudiante. |
-| **genero** | VARCHAR(20) | not null |  |Genero del estudiante. Opciones: Femenino, Masculino, Otro. |
-| **curp** | VARCHAR(18) | not null |  |Identificación única en México. |
+| **genero** | VARCHAR(20) | not null |  |Genero del estudiante. Opciones: femenino, masculino, otro. |
+| **curp** | VARCHAR(18) | not null, unique |  |Identificación única en México. |
 | **fecha_inscripcion** | DATE | not null |  |Fecha en que es inscribió el estudiante. |
 | **grado_escolar** | VARCHAR(50) | not null |  |Grado escolar actual del estudiante. |
 | **especialidad** | VARCHAR(255) | null |  |Especialidad del estudiante. |
-| **promedio_general** | DECIMAL(2,2) | not null |  |Promedio general del estudiante. |
+| **promedio_general** | DECIMAL(4,2) | null |  |Promedio general del estudiante. |
 | **carrera** | VARCHAR(150) | null |  |Carrera del estudiante. |
 | **id_escuela** | VARCHAR(36) | not null, unique | fk_estudiantes_id_escuela_colegios |Clave foránea. Identificador único de un colegio.  |
 
@@ -167,8 +170,8 @@ Si todo ha salidos bien, debemos de ser capaces de ver la base de datos **toor**
 | **fecha_vencimiento** | DATE | not null |  |Fecha de vencimiento de la factura. |
 | **concepto** | VARCHAR(255) | not null |  |Concepto de la factura.  |
 | **monto** | DECIMAL(10,2) | not null |  |Monto de la factura. |
-| **monto_pagado** | DECIMAL(10,2) | not null |  |Monto pagado de la factura. |
-| **estatus** | VARCHAR(20) | not null |  |Estado de la factura. Opciones: Pendiente, Pagada, Vencida. |
+| **monto_pagado** | DECIMAL(10,2) | not null, default 0.00 |  |Monto pagado de la factura. |
+| **estatus** | VARCHAR(20) | not null, default "pendiente" |  |Estado de la factura. Opciones: pendiente, pagada, vencida. |
 | **id_estudiante** | VARCHAR(36) | not null, unique | fk_facturas_id_estudiante_estudiantes |Clave foránea. Identificador único de un estudiante. |
 
 
@@ -179,7 +182,7 @@ Si todo ha salidos bien, debemos de ser capaces de ver la base de datos **toor**
 | **id** | VARCHAR(36) | 🔑 PK, not null, unique |  |Identificador único de un pago parcial o completo para una factura. |
 | **fecha_pago** | DATE | not null |  |Fecha en que se realizo el pago.  |
 | **monto_pagado** | DECIMAL(10,2) | not null |  |Monto del pago abonado hacia la factura. |
-| **metodo_pago** | VARCHAR(50) | not null |  |Método para realizar el pago. Opciones: Efectivo, Tarjeta, Transferencia. |
+| **metodo_pago** | VARCHAR(50) | not null |  |Método para realizar el pago. Opciones: efectivo, tarjeta, transferencia. |
 | **referencia_pago** | VARCHAR(70) | not null |  |Referencia del pago.  |
 | **id_factura** | VARCHAR(36) | not null, unique | fk_pagos_id_factura_facturas |Clave foránea. Identificador único de la factura asociada al pago.  |
 | **cuenta_beneficiaria** | VARCHAR(25) | not null |  |CLABE, tarjeta de débito o número de celular. |
