@@ -209,3 +209,6 @@ __marimo__/
 # Other
 .python-version
 .vscode
+*.python-version
+*.vscode
+
