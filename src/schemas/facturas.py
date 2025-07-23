@@ -20,3 +20,11 @@ class GetFacturaFilters(BaseModel):
     id: Optional[str] = Query(None, max_length=36)
     estatus: Optional[str] = Query(None, max_length=20)
     id_estudiante: Optional[str] = Query(None)
+
+
+class UpdateFacturaSchema(BaseModel):
+    fecha_emision: Optional[date] = None
+    fecha_vencimiento: Optional[date] = None
+    estatus: Optional[str] = None
+    monto_pagado: Optional[float] = None
+    concepto: Optional[str] = None

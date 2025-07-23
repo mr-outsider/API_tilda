@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from config.settings import logger
-from schemas.facturas import GetFacturaFilters
+from schemas.facturas import GetFacturaFilters, UpdateFacturaSchema
 from fastapi import Depends
 from utils.response import ResponseHandler
 from services.facturas import invoice_service
@@ -32,7 +32,7 @@ async def get_factura(filters: GetFacturaFilters = Depends()):
 
 
 @router.delete("/{id_factura}")
-async def delete_estudiante(id_factura: str):
+async def delete_factura(id_factura: str):
     """Delete a  from db.
 
     Args:
@@ -47,3 +47,33 @@ async def delete_estudiante(id_factura: str):
     response_invoice = invoice_service.delete_invoice(identificador=id_factura)
     logger.success("Delete a invoice finished - STATUS: OK")
     return response_invoice
+
+
+@router.patch("/{id_invoice}")
+async def update_factura(id_invoice: str, update_data: UpdateFacturaSchema):
+    """Update a invoice from db.
+
+    Args:
+        id_invoice (str): Id in database
+    """
+    if len(id_invoice) != 36:
+        return ResponseHandler.error(
+            message=f"length invoice id '{id_invoice}' is not valid!", status_code=400
+        )
+    logger.info("Updating invoice in progress... - STATUS: STARTED")
+
+    data_to_update = {}
+    for field, value in update_data.dict(exclude_unset=True).items():
+        if field == "estatus":
+            valid_options = ["pendiente", "pagada", "vencida"]
+            if value not in valid_options:
+                return ResponseHandler.error(
+                    message=f"estatus '{value}' is not a valid option. Please select a value in: {valid_options}",
+                    status_code=400,
+                )
+        data_to_update[field] = value
+
+    response = invoice_service.update_invoice(identificador=id_invoice, data=update_data)
+    logger.success("Updating invoice finished - STATUS: FINISHED")
+
+    return response
