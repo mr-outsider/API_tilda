@@ -8,6 +8,7 @@
 - [Consumir endpoints](#endpoints)
 - -  [Health Check Endpoint](#health)
 - - [Colegio](#school)
+- - [Estudiantes](#students)
 
 
 <h1 id="fin">Vista General</h1>
@@ -510,5 +511,79 @@ Caso donde el registro no fue encontrado en la base de datos.
 {
     "status": "error",
     "error": "School 'CCT12345678900' does not exist!"
+}
+```
+---
+
+<h2 id="students">Estudiantes</h2>
+
+[back to index](#indice)
+
+### Método: POST
+
+### URL: {{BASE_URL}}/v1/schools/:identificador/student
+
+- identificador (str): Se refiere a la clave_cct de la escuela en cuestión.
+
+### Query Params: N/A
+
+### Body
+
+```json
+{
+    "nombre": "Luis",
+    "apellido_paterno": "Martínez",
+    "apellido_materno": "Gómez",
+    "fecha_nacimiento": "2007-05-14",
+    "genero": "Masculino",
+    "curp": "MAGL070514HDFRMS09",
+    "fecha_inscripcion": "2023-08-21",
+    "grado_escolar": "3° de Secundaria",
+    "especialidad": "Robótica",
+    "promedio_general": 9.45,
+    "carrera": "Ingeniería en Mecatrónica"
+}
+```
+
+### **Response - Status Code: 201**
+Registro creado de manera exitosa.
+
+```json
+{
+    "status": "success",
+    "pagination": {
+        "total": 1,
+        "next": null,
+        "previous": null,
+        "total_pages": 1,
+        "current_page": 1
+    },
+    "body": [
+        {
+            "id": "2a353798-f153-4a08-9325-e98d4e138b42",
+            "nombre": "Luis",
+            "apellido_paterno": "Martínez",
+            "apellido_materno": "Gómez",
+            "fecha_nacimiento": "2007-05-14",
+            "genero": "Masculino",
+            "curp": "MAGL070514HDFRMS09",
+            "fecha_inscripcion": "2023-08-21",
+            "grado_escolar": "3° de Secundaria",
+            "especialidad": "Robótica",
+            "promedio_general": 9.45,
+            "carrera": "Ingeniería en Mecatrónica",
+            "id_escuela": "620fd39c-fb19-420f-a9c6-c05a1f4247d7"
+        }
+    ]
+}
+```
+
+### **Response - Status Code: 400**
+Caso donde el registro ya se encuentra en la base de datos.
+
+```json
+{
+    "status": "error",
+    "error": "Student 'MAGL070514HDFRMS09' already exist!"
 }
 ```

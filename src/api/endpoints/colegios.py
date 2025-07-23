@@ -2,10 +2,12 @@ from fastapi import APIRouter
 
 from config.settings import logger
 from schemas.colegios import AddColegioSchema, GetColegioFilters, UpdateColegioSchema
+from schemas.estudiantes import AddEstudianteSchema
 from services.colegios import school_service
+from services.estudiantes import student_service
 from fastapi import Depends
 from utils.response import ResponseHandler
-
+import json
 
 router = APIRouter(prefix="/schools")
 
@@ -90,3 +92,28 @@ async def update_model(id_colegio: str, update_data: UpdateColegioSchema):
     logger.success("Updating model finished - STATUS: FINISHED")
 
     return response
+
+
+# Student
+@router.post("/{id_colegio}/student")
+async def add_students(id_colegio: str, datos_estudiante: AddEstudianteSchema):
+    """add a student linked to school.
+
+    Args:
+        id_colegio (str): clave_cct
+    """
+    logger.info("Create a new student in progress... - STATUS: STARTED")
+
+    filter_dict = {"clave_cct": id_colegio}
+    response = school_service.list_colegios(**filter_dict)
+
+    if json.loads(response.body)["pagination"]["total"] != 1:
+        return ResponseHandler.error(
+            message=f"School '{id_colegio}' does not exist in database!", status_code=400
+        )
+
+    identificador_colegio = json.loads(response.body)["body"][0]["id"]
+    datos_estudiante.id_escuela = identificador_colegio
+    response_school = student_service.create_new_student(data=datos_estudiante)
+    logger.success("Create a new student finished - STATUS: OK")
+    return response_school
