@@ -114,5 +114,36 @@ class SchoolService:
             },
         )
 
+    def delete_school(self, identificador: str):
+        """Method to control flow during delete from db."""
+        logger.info("SchoolService | delete_school(): STARTED...")
+
+        if len(identificador) == 36:
+            filters = {"id": identificador}
+        elif len(identificador) <= 20:
+            filters = {"clave_cct": identificador}
+
+        response = school_manager.delete_school(**filters)
+        if len(response) == 0:
+            return ResponseHandler.error(
+                message=f"School '{identificador}' was not deleted! Please check if the register exist.",
+                status_code=400,
+            )
+
+        logger.success("SchoolService | delete_school(): FINISHED")
+
+        return ResponseHandler.success(
+            message=f"School '{identificador}' deleted OK!",
+            body=[],
+            status_code=200,
+            pagination={
+                "total": len(response),
+                "next": None,
+                "previous": None,
+                "total_pages": 1,
+                "current_page": 1,
+            },
+        )
+
 
 school_service = SchoolService()

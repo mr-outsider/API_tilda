@@ -334,6 +334,7 @@ Caso donde el registro ya se encuentra en la base de datos.
 ### URL: {{BASE_URL}}/v1/schools
 
 ### Query Params:
+- id (str): 9ddae72d-a9f3-40bb-b2a4-3de86fa403cb [Ejemplo]
 - clave_cct (str): CCT1234567890 [Ejemplo]
 - nombre (str): Montesori [Ejemplo]
 - nivel_educativo (str): Universidad [Ejemplo] - Opciones: Preescolar, Primaria, Secundaria, Universidad.
@@ -389,4 +390,46 @@ Caso donde se usa una opción no válida en uno de los filtros.
     "error": "nivel_educativo 'Kinder' is not a valid option. Please select a value in: ['Preescolar', 'Primaria', 'Secundaria', 'Universidad']"
 }
 ```
+
 ---
+
+[back to index](#indice)
+
+### Método: DELETE
+
+### URL: {{BASE_URL}}/v1/schools/{{identificador}}
+
+- identificador (str): Puede ser el uuid o la clave_cct de la escuela en cuestión.
+
+### Query Params: N/A
+
+
+### Body: N/A
+
+### **Response - Status Code: 200**
+
+
+```json
+{
+    "status": "success",
+    "message": "School 'CCT1234567890' deleted OK!",
+    "pagination": {
+        "total": 1,
+        "next": null,
+        "previous": null,
+        "total_pages": 1,
+        "current_page": 1
+    },
+    "body": []
+}
+```
+
+### **Response - Status Code: 400**
+Caso donde el registro ya fue eliminado o no se encontró en la base de datos.
+
+```json
+{
+    "status": "error",
+    "error": "School 'CCT1234567890' was not deleted! Please check if the register exist."
+}
+```

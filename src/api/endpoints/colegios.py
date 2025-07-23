@@ -57,3 +57,16 @@ async def get_colegios(filters: GetColegioFilters = Depends()):
     response = school_service.list_colegios(**filter_dict)
     logger.success("Getting colegios finished - STATUS: OK")
     return response
+
+
+@router.delete("/{id_colegio}")
+async def delete_colegion(id_colegio: str):
+    """Delete a school from db.
+
+    Args:
+        id_colegio (str): Could be id in database or clave_cct
+    """
+    logger.info("Delete a school in progress... - STATUS: STARTED")
+    response_school = school_service.delete_school(identificador=id_colegio)
+    logger.success("Delete a school finished - STATUS: OK")
+    return response_school
