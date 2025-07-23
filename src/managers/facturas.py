@@ -62,5 +62,30 @@ class InvoiceManager:
             self.connection.close()
             return []
 
+    @manage_connection
+    def delete_invoice(self, **filters):
+        """Method to delete a invoice by ID."""
+        logger.info("InvoiceManager | delete_invoice(): STARTED...")
+        id_obj = filters.pop("id", None)
+
+        try:
+            invoice = self.connection.query(FacturaModel).filter_by(id=id_obj).first()
+
+            if not invoice:
+                logger.warning(
+                    f"InvoiceManager | delete_invoice(): Student with ID {id_obj} not found."
+                )
+                return []
+
+            self.connection.delete(invoice)
+            self.connection.commit()
+            logger.success("InvoiceManager | delete_invoice(): FINISHED")
+            return [invoice]
+        except Exception as e:
+            self.connection.rollback()
+            logger.error(f"InvoiceManager | delete_invoice(): ERROR - {e}")
+            self.connection.close()
+            return []
+
 
 invoice_manager = InvoiceManager()

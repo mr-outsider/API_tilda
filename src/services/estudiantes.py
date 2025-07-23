@@ -112,7 +112,7 @@ class StudentService:
 
     def delete_student(self, identificador: str):
         """Method to control flow during delete from db."""
-        logger.info("StudentService | delete_school(): STARTED...")
+        logger.info("StudentService | delete_student(): STARTED...")
 
         if len(identificador) == 36:
             filters = {"id": identificador}
@@ -126,7 +126,7 @@ class StudentService:
                 status_code=400,
             )
 
-        logger.success("StudentService | delete_school(): FINISHED")
+        logger.success("StudentService | delete_student(): FINISHED")
 
         return ResponseHandler.success(
             message=f"Student '{identificador}' deleted OK!",

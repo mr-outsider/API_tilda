@@ -96,5 +96,33 @@ class InvoiceService:
             },
         )
 
+    def delete_invoice(self, identificador: str):
+        """Method to control flow during delete from db."""
+        logger.info("InvoiceService | delete_invoice(): STARTED...")
+
+        filters = {"id": identificador}
+
+        response = invoice_manager.delete_invoice(**filters)
+        if len(response) == 0:
+            return ResponseHandler.error(
+                message=f"Invoice '{identificador}' was not deleted! Please check if the register exist.",
+                status_code=400,
+            )
+
+        logger.success("InvoiceService | delete_invoice(): FINISHED")
+
+        return ResponseHandler.success(
+            message=f"Invoice '{identificador}' deleted OK!",
+            body=[],
+            status_code=200,
+            pagination={
+                "total": len(response),
+                "next": None,
+                "previous": None,
+                "total_pages": 1,
+                "current_page": 1,
+            },
+        )
+
 
 invoice_service = InvoiceService()
