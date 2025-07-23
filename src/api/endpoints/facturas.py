@@ -29,3 +29,21 @@ async def get_factura(filters: GetFacturaFilters = Depends()):
     response = invoice_service.list_invoices(**filter_dict)
     logger.success("Getting invoices finished - STATUS: OK")
     return response
+
+
+@router.delete("/{id_factura}")
+async def delete_estudiante(id_factura: str):
+    """Delete a  from db.
+
+    Args:
+        id_factura (str): Id in database
+    """
+    if len(id_factura) != 36:
+        return ResponseHandler.error(
+            message=f"length invoice id '{id_factura}' is not valid!", status_code=400
+        )
+
+    logger.info("Delete a invoice in progress... - STATUS: STARTED")
+    response_invoice = invoice_service.delete_invoice(identificador=id_factura)
+    logger.success("Delete a invoice finished - STATUS: OK")
+    return response_invoice

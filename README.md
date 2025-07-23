@@ -907,3 +907,46 @@ Caso donde se usa una opción no válida para el filtro 'estatus'.
 ```
 
 ---
+
+[back to index](#indice)
+
+### Método: DELETE
+
+### URL: {{BASE_URL}}/v1/invoices/{{identificador}}
+
+- identificador (str): Es el uuid de la factura en cuestión.
+
+### Query Params: N/A
+
+
+### Body: N/A
+
+### **Response - Status Code: 200**
+
+
+```json
+{
+    "status": "success",
+    "message": "Invoice '8f5be063-65cb-4113-995a-acdb8c46ae71' deleted OK!",
+    "pagination": {
+        "total": 1,
+        "next": null,
+        "previous": null,
+        "total_pages": 1,
+        "current_page": 1
+    },
+    "body": []
+}
+```
+
+### **Response - Status Code: 400**
+Caso donde el registro ya fue eliminado o no se encontró en la base de datos.
+
+```json
+{
+    "status": "error",
+    "error": "Invoice '8f5be063-65cb-4113-995a-acdb8c46ae71' was not deleted! Please check if the register exist."
+}
+```
+
+---
