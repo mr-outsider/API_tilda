@@ -18,7 +18,7 @@ env_file = dotenv_values(env_path)
 class BaseConfig(BaseSettings):
     """Global configurations."""
 
-    PROJECT_NAME: Optional[str] = "Nexus-API"
+    PROJECT_NAME: Optional[str] = "Mattilda-API"
     API_V1: Optional[str] = "/v1"
     BACKEND_CORS_ORIGINS: Optional[List[AnyHttpUrl]] = []
     ENVIRONMENT: str = env_file["ENVIRONMENT"]

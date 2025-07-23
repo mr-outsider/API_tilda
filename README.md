@@ -19,7 +19,7 @@ Proyecto realizado para llevar a cabo la prueba técnica de Mattilda. Aquí enco
 
 <h1 id="run_project">¿Cómo correr este proyecto?</h1>
 
-> NOTA: Si no quieres levantar el proyecto para probarlo en local. Puedes consumir la API directamente desde Internet. Pasa al apartado: **¿Cómo consumir los endpoints?** para ver cómo hacerlo.
+> NOTA: Si no quieres levantar el proyecto para probarlo en local. Puedes consumir la API directamente desde Internet. Pasa al apartado: **[Consumir endpoints](#endpoints)** para ver cómo hacerlo.
 
 Para poder llevar a cabo los siguientes pasos, es necesario contar con las siguientes herramientas instaladas en el sistema:
 - Docker
@@ -228,8 +228,11 @@ documentos y mitigar una posible vulnerabilidad: Local File Inclusion ([LFI | CW
 El entorno consta de 3 CRUDS: Schools, Students, Invoices. Vamos a abordar primero Schools para ver
 cómo consumir el servicio y qué podemos esperar en las respuestas.
 
-
+Para probar en local:
 **BASE_URL = localhost:8000**
+
+Para probar online:
+**BASE_URL = http://35.90.254.65**
 
 <h2 id="health">Health Check Endpoint</h2>
 
