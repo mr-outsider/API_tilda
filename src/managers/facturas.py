@@ -37,5 +37,30 @@ class InvoiceManager:
             self.connection.close()
             return []
 
+    @manage_connection
+    def get_invoices(self, **filters):
+        """Method to request register from table invoices in database."""
+        logger.info("InvoiceManager | get_invoices(): STARTED...")
+
+        id_obj = filters.pop("id", None)
+        estatus = filters.pop("estatus", None)
+        id_estudiante = filters.pop("id_estudiante", None)
+
+        try:
+            query = self.connection.query(FacturaModel)
+            if id_obj:
+                query = query.filter(FacturaModel.id == id_obj)
+            if estatus:
+                query = query.filter(FacturaModel.estatus == estatus)
+            if id_estudiante:
+                query = query.filter(FacturaModel.id_estudiante == id_estudiante)
+
+            logger.success("InvoiceManager | get_invoices(): FINISHED")
+            return query.all()
+        except Exception as e:
+            logger.error(f"InvoiceManager | get_invoices(): ERROR - {e}")
+            self.connection.close()
+            return []
+
 
 invoice_manager = InvoiceManager()
