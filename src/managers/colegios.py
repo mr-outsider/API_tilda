@@ -16,10 +16,28 @@ class SchoolManager:
         logger.info("SchoolManager | get_schools(): STARTED...")
 
         clave_cct = filters.pop("clave_cct", None)
+        nombre = filters.pop("nombre", None)
+        nivel_educativo = filters.pop("nivel_educativo", None)
+        turno = filters.pop("turno", None)
+        estatus = filters.pop("estatus", None)
+        correo_electronico = filters.pop("correo_electronico", None)
+
         try:
             query = self.connection.query(ColegioModel)
             if clave_cct:
                 query = query.filter(ColegioModel.clave_cct == clave_cct)
+            if nombre:
+                query = query.filter(ColegioModel.nombre == nombre)
+            if nivel_educativo:
+                query = query.filter(ColegioModel.nivel_educativo == nivel_educativo)
+            if turno:
+                query = query.filter(ColegioModel.turno == turno)
+            if estatus:
+                query = query.filter(ColegioModel.estatus == estatus)
+            if correo_electronico:
+                query = query.filter(
+                    ColegioModel.correo_electronico == correo_electronico
+                )
             logger.success("SchoolManager | get_schools(): FINISHED")
             return query.all()
         except Exception as e:

@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr, constr
 from uuid import uuid4
 from typing import Optional, Literal
+from fastapi import Query
 
 
 class AddColegioSchema(BaseModel):
@@ -23,3 +24,12 @@ class AddColegioSchema(BaseModel):
 
     # TODO: Cambiar el formato del error de los campos que se válidan con el schema
     # nivel_educativo, turno, estatus
+
+
+class GetColegioFilters(BaseModel):
+    clave_cct: Optional[str] = Query(None, max_length=20)
+    nombre: Optional[str] = Query(None, max_length=255)
+    nivel_educativo: Optional[str] = Query(None)
+    turno: Optional[str] = Query(None)
+    estatus: Optional[str] = Query(None)
+    correo_electronico: Optional[str] = Query(None)
