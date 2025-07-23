@@ -1,6 +1,7 @@
 from typing import Dict
 
 from fastapi import APIRouter
+from fastapi.responses import JSONResponse
 
 from config.settings import logger
 from managers.database_operations import general_operations_db
@@ -16,7 +17,11 @@ def health_check() -> Dict:
     result = general_operations_db.ping_db()
     if result:
         logger.success("Checking connection in progress... - STATUS: OK")
-        return {"status": "Establish connection - OK"}
+        return JSONResponse(
+            status_code=200, content={"status": "Establish connection - OK"}
+        )
     else:
         logger.error("Checking connection in progress... - STATUS: FAIL")
-        return {"status": "Bad response - Connection Fail"}
+        return JSONResponse(
+            status_code=400, content={"status": "Bad response - Connection Fail"}
+        )

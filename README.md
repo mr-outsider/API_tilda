@@ -5,6 +5,9 @@
 - [Vista General](#vista_general)
 - [¿Cómo correr este proyecto?](#run_project)
 - [Creación del diagrama ER](#er)
+- [Consumir endpoints](#endpoints)
+- -  [Health Check Endpoint](#health)
+- - [Colegio](#school)
 
 
 <h1 id="fin">Vista General</h1>
@@ -128,13 +131,13 @@ TODO: Generar un script para crear las tablas y cargar información de prueba.
 | **clave_cct** | VARCHAR(20) | not null, unique |  |Clave de centro de trabajo. Valor único en México.  |
 | **nombre** | VARCHAR(255) | not null |  |Nombre oficial de la escuela. |
 | **nivel_educativo** | VARCHAR(50) | not null |  |Opciones: Preescolar, Primaria, Secundaria, Universidad. |
-| **calle** | VARCHAR(255) | null |  |Dirección: Calle y Número. |
-| **colonia** | VARCHAR(255) | null |  |Colonia o barrio.  |
-| **municipio** | VARCHAR(100) | null |  |Municipio o alcaldía. |
-| **estado** | VARCHAR(100) | null |  |Estado de la república. |
-| **codigo_postal** | VARCHAR(10) | null |  |Código postal. |
-| **latitud** | DECIMAL(9,6) | not null |  |Coordenada geográfica. |
-| **longitud** | DECIMAL(9,6) | not null |  |Coordenada geográfica. |
+| **calle** | VARCHAR(255) |  |  |Dirección: Calle y Número. |
+| **colonia** | VARCHAR(255) |  |  |Colonia o barrio.  |
+| **municipio** | VARCHAR(100) |  |  |Municipio o alcaldía. |
+| **estado** | VARCHAR(100) |  |  |Estado de la república. |
+| **codigo_postal** | VARCHAR(10) |  |  |Código postal. |
+| **latitud** | DECIMAL(9,6) | null |  |Coordenada geográfica. |
+| **longitud** | DECIMAL(9,6) | null |  |Coordenada geográfica. |
 | **telefono** | VARCHAR(20) | null |  |Teléfono de contacto. |
 | **correo_electronico** | VARCHAR(100) | not null, unique |  |Correo de contacto oficial. |
 | **nombre_director** | VARCHAR(255) | not null |  |Nombre del director o responsable. |
@@ -208,3 +211,109 @@ TODO: Generar un script para crear las tablas y cargar información de prueba.
 - Se ha añadido una cuarta tabla (pagos) además de las principales, esto con la finalidad de permitir al estudiante los pagos parciales hacía sus facturas.
 - Notese que los datos útilizados en la tabla pagos, son los minimos necesarios para emitir el Comprobante Electrónico de Pago en México (CEP).
 ![Rastreo banco de méxico.](img_docs/banco_mex_rastreo.png)
+
+
+<h1 id="endpoints">Consumir endpoints</h1>
+[back to index](#indice)
+
+
+El entorno consta de 3 CRUDS: Schools, Students, Invoices. Vamos a abordar primero Schools para ver
+cómo consumir el servicio y qué podemos esperar en las respuestas.
+
+
+**BASE_URL = localhost:8000**
+
+<h2 id="health">Health Check Endpoint</h2>
+
+### Método: GET
+
+### URL: {{BASE_URL}}/health-check
+
+### Body: N/A
+
+### **Response - Status Code: 200**
+
+```json
+{
+    "status": "Establish connection - OK"
+}
+```
+
+### **Repsonse - Status Code: 400**
+```json
+{
+    "status": "Bad response - Connection Fail"
+}
+```
+<h2 id="school">Colegio</h2>
+
+### Método: Post
+
+### URL: {{BASE_URL}}/v1/schools
+
+### Body
+
+```json
+{
+    "clave_cct": "CCT1234567000",
+    "nombre": "Instituto Educativo Test",
+    "nivel_educativo": "Primaria",
+    "calle": "Av. Viva 742",
+    "colonia": "Centro",
+    "municipio": "Cuernavaca",
+    "estado": "Morelos",
+    "codigo_postal": "62000",
+    "latitud": 18.918972,
+    "longitud": -99.234123,
+    "telefono": "7771234567",
+    "correo_electronico": "contacto@institutoTest.edu.mx",
+    "nombre_director": "María LL",
+    "turno": "Matutino",
+    "estatus": "activa"
+}
+```
+
+### **Response - Status Code: 201**
+Registro creado de manera exitosa.
+
+```json
+{
+    "status": "success",
+    "pagination": {
+        "next": null,
+        "previous": null,
+        "total_pages": 1,
+        "current_page": 1
+    },
+    "body": [
+        {
+            "id": "8c20fe9c-7cd1-4768-a44a-74a022e6ec14",
+            "clave_cct": "CCT1234567000",
+            "nombre": "Instituto Educativo Test",
+            "nivel_educativo": "Primaria",
+            "calle": "Av. Viva 742",
+            "colonia": "Centro",
+            "municipio": "Cuernavaca",
+            "estado": "Morelos",
+            "codigo_postal": "62000",
+            "latitud": 18.918972,
+            "longitud": -99.234123,
+            "telefono": "7771234567",
+            "correo_electronico": "contacto@institutoTest.edu.mx",
+            "nombre_director": "María LL",
+            "turno": "Matutino",
+            "estatus": "activa"
+        }
+    ]
+}
+```
+
+### **Response - Status Code: 400**
+Caso donde el registro ya se encuentra en la base de datos.
+
+```json
+{
+    "status": "error",
+    "error": "School 'CCT1234567890' already exist!"
+}
+```
