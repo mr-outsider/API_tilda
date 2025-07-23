@@ -76,5 +76,39 @@ class StudentService:
                 status_code=400,
             )
 
+    def list_students(self, struct_response: bool = True, **filters):
+        """Method to control response from request SELECT in database."""
+        logger.info("StudentService | list_student(): STARTED...")
+        response = student_manager.get_students(**filters)
+        if len(response) > 0:
+            if struct_response is True:
+                structured_data = self._struct_response(data=response)
+
+            logger.success("StudentService | list_student(): FINISHED")
+            return ResponseHandler.success(
+                body=structured_data,
+                status_code=200,
+                pagination={
+                    "total": len(response),
+                    "next": None,
+                    "previous": None,
+                    "total_pages": 1,
+                    "current_page": 1,
+                },
+            )
+
+        logger.success("StudentService | list_student(): FINISHED")
+        return ResponseHandler.success(
+            body=[],
+            status_code=200,
+            pagination={
+                "total": 0,
+                "next": None,
+                "previous": None,
+                "total_pages": 1,
+                "current_page": 1,
+            },
+        )
+
 
 student_service = StudentService()

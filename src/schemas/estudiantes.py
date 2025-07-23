@@ -1,7 +1,8 @@
 from pydantic import BaseModel, constr
-from typing import Optional
+from typing import Optional, Literal
 from datetime import date
 from uuid import uuid4
+from fastapi import Query
 
 
 class AddEstudianteSchema(BaseModel):
@@ -10,7 +11,7 @@ class AddEstudianteSchema(BaseModel):
     apellido_paterno: constr(max_length=100)
     apellido_materno: constr(max_length=100)
     fecha_nacimiento: date
-    genero: constr(max_length=20)
+    genero: Literal["femenino", "masculino", "otro"]
     curp: constr(max_length=18)
     fecha_inscripcion: date
     grado_escolar: constr(max_length=50)
@@ -18,3 +19,10 @@ class AddEstudianteSchema(BaseModel):
     promedio_general: Optional[float] = None
     carrera: Optional[constr(max_length=150)] = None
     id_escuela: Optional[str] = None
+
+
+class GetEstudianteFilters(BaseModel):
+    id: Optional[str] = Query(None, max_length=36)
+    curp: Optional[str] = Query(None, max_length=18)
+    genero: Optional[str] = Query(None, max_length=20)
+    id_escuela: Optional[str] = Query(None)

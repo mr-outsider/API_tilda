@@ -330,6 +330,7 @@ Caso donde el registro ya se encuentra en la base de datos.
 ---
 
 [back to index](#indice)
+
 ### Método: GET
 
 ### URL: {{BASE_URL}}/v1/schools
@@ -587,3 +588,71 @@ Caso donde el registro ya se encuentra en la base de datos.
     "error": "Student 'MAGL070514HDFRMS09' already exist!"
 }
 ```
+---
+
+[back to index](#indice)
+
+### Método: GET
+
+### URL: {{BASE_URL}}/v1/students
+
+### Query Params:
+- id (str): 9ddae72d-a9f3-40bb-b2a4-3de86fa403cb [Ejemplo]
+- curp (str): MAGL070514HDFRMS09 [Ejemplo]
+- genero (str): Masculino [Ejemplo] - Opciones: femenino, masculino, otro
+- id_escuela (str): 9ddae72d-a9f3-40ds-b2a4-3de86fa403dsa [Ejemplo]
+
+
+### Body: N/A
+
+### **Response - Status Code: 200**
+
+
+```json
+{
+    "status": "success",
+    "pagination": {
+        "total": 1,
+        "next": null,
+        "previous": null,
+        "total_pages": 1,
+        "current_page": 1
+    },
+    "body": [
+        {
+            "id": "2a353798-f153-4a08-9325-e98d4e138b42",
+            "nombre": "Luis",
+            "apellido_paterno": "Martínez",
+            "apellido_materno": "Gómez",
+            "fecha_nacimiento": "2007-05-14",
+            "genero": "Masculino",
+            "curp": "MAGL070514HDFRMS09",
+            "fecha_inscripcion": "2023-08-21",
+            "grado_escolar": "3° de Secundaria",
+            "especialidad": "Robótica",
+            "promedio_general": 9.45,
+            "carrera": "Ingeniería en Mecatrónica",
+            "id_escuela": "620fd39c-fb19-420f-a9c6-c05a1f4247d7"
+        }
+    ]
+}
+```
+
+### **Response - Status Code: 400**
+Caso donde no se encuentra el registro con los filtros útilizados.
+
+```json
+{
+    "status": "success",
+    "pagination": {
+        "total": 0,
+        "next": null,
+        "previous": null,
+        "total_pages": 1,
+        "current_page": 1
+    },
+    "body": []
+}
+```
+
+---
