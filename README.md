@@ -10,6 +10,7 @@
 - -  [Health Check Endpoint](#health)
 - - [Colegio](#school)
 - - [Estudiantes](#students)
+- - [Facturas](#invoices)
 
 
 <h1 id="fin">Vista General</h1>
@@ -780,3 +781,65 @@ Caso donde el identificador del estudiante no es válido.
     "error": "length student id 'MAGL070514HDFRMS011' is not valid!"
 }
 ```
+---
+
+<h2 id="invoices">Facturas</h2>
+
+[back to index](#indice)
+
+### Método: POST
+
+### URL: {{BASE_URL}}/v1/students/:identificador/invoice
+
+- identificador (str): Se refiere a la CURP del estudiante en cuestión.
+
+### Query Params: N/A
+
+### Body
+
+```json
+{
+  "fecha_emision": "2025-07-01",
+  "fecha_vencimiento": "2025-07-31",
+  "concepto": "Pago mensualidad julio",
+  "monto": 1500.00
+}
+```
+
+### **Response - Status Code: 201**
+Registro creado de manera exitosa.
+
+```json
+{
+    "status": "success",
+    "pagination": {
+        "total": 1,
+        "next": null,
+        "previous": null,
+        "total_pages": 1,
+        "current_page": 1
+    },
+    "body": [
+        {
+            "id": "67a6ba83-447e-45cd-b02f-d675446770c4",
+            "fecha_emision": "2025-07-01",
+            "fecha_vencimiento": "2025-07-31",
+            "concepto": "Pago mensualidad julio",
+            "monto": 1500.0,
+            "monto_pagado": 0.0,
+            "estatus": "pendiente",
+            "id_estudiante": "14f8e910-2737-4bb6-872f-810a21eb6511"
+        }
+    ]
+}
+```
+
+### NOTA
+
+Dado que una factura como tal no se puede repetir, en el sentido de que no podemos tomar dos
+facturas que sean iguales como las mismas porque ambas pueden significar dos prestamos
+diferentes. En este caso lo que se debe de hacer es el uso del cache. Para evitar que al momento de crear, presionando dos veces el botón de "crear" en un intervalo de tiempo menor a un minuto, se creen dos facturas similares. En su lugar, el cache nos ayudará a evitar este tipo de casos.
+
+NOTA: No he podido implementarlo por falta de tiempo.
+
+---

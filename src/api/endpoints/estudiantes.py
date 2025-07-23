@@ -2,10 +2,12 @@ from fastapi import APIRouter
 
 from config.settings import logger
 from schemas.estudiantes import GetEstudianteFilters, UpdateEstudianteSchema
+from schemas.facturas import AddFacturaSchema
 from fastapi import Depends
 from utils.response import ResponseHandler
 from services.estudiantes import student_service
-
+from services.facturas import invoice_service
+import json
 
 router = APIRouter(prefix="/students")
 
@@ -52,7 +54,7 @@ async def delete_estudiante(id_estudiante: str):
 
 
 @router.patch("/{id_estudiante}")
-async def update_colegio(id_estudiante: str, update_data: UpdateEstudianteSchema):
+async def update_estudiante(id_estudiante: str, update_data: UpdateEstudianteSchema):
     """Update a student from db.
 
     Args:
@@ -74,3 +76,28 @@ async def update_colegio(id_estudiante: str, update_data: UpdateEstudianteSchema
     logger.success("Updating model finished - STATUS: FINISHED")
 
     return response
+
+
+# Invoices
+@router.post("/{id_student}/invoice")
+async def add_factura(id_student: str, datos_factura: AddFacturaSchema):
+    """add an invoice linked to student.
+
+    Args:
+        id_student (str): curp
+    """
+    logger.info("Create a new invoice in progress... - STATUS: STARTED")
+
+    filter_dict = {"curp": id_student}
+    response = student_service.list_students(**filter_dict)
+
+    if json.loads(response.body)["pagination"]["total"] != 1:
+        return ResponseHandler.error(
+            message=f"Student'{id_student}' does not exist in database!", status_code=400
+        )
+
+    identificador_student = json.loads(response.body)["body"][0]["id"]
+    datos_factura.id_estudiante = identificador_student
+    response_invoice = invoice_service.create_new_invoice(data=datos_factura)
+    logger.success("Create a new invoice finished - STATUS: OK")
+    return response_invoice
