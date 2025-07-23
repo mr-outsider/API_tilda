@@ -15,6 +15,7 @@ class SchoolManager:
         """Method to request register from table colegios in database."""
         logger.info("SchoolManager | get_schools(): STARTED...")
 
+        id_obj = filters.pop("id", None)
         clave_cct = filters.pop("clave_cct", None)
         nombre = filters.pop("nombre", None)
         nivel_educativo = filters.pop("nivel_educativo", None)
@@ -24,6 +25,8 @@ class SchoolManager:
 
         try:
             query = self.connection.query(ColegioModel)
+            if id_obj:
+                query = query.filter(ColegioModel.id == id_obj)
             if clave_cct:
                 query = query.filter(ColegioModel.clave_cct == clave_cct)
             if nombre:
@@ -76,6 +79,39 @@ class SchoolManager:
         except Exception as e:
             self.connection.rollback()
             logger.error(f"SchoolManager | insert_new_school(): ERROR - {e}")
+            self.connection.close()
+            return []
+
+    @manage_connection
+    def delete_school(self, **filters):
+        """Method to delete a school by ID."""
+        logger.info("SchoolManager | delete_school(): STARTED...")
+        id_obj = filters.pop("id", None)
+        clave_cct = filters.pop("clave_cct", None)
+
+        try:
+            if id_obj:
+                school = self.connection.query(ColegioModel).filter_by(id=id_obj).first()
+            if clave_cct:
+                school = (
+                    self.connection.query(ColegioModel)
+                    .filter_by(clave_cct=clave_cct)
+                    .first()
+                )
+
+            if not school:
+                logger.warning(
+                    f"SchoolManager | delete_school(): School with ID {id_obj} not found."
+                )
+                return []
+
+            self.connection.delete(school)
+            self.connection.commit()
+            logger.success("SchoolManager | delete_school(): FINISHED")
+            return [school]
+        except Exception as e:
+            self.connection.rollback()
+            logger.error(f"SchoolManager | delete_school(): ERROR - {e}")
             self.connection.close()
             return []
 
