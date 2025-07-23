@@ -62,5 +62,39 @@ class InvoiceService:
                 status_code=400,
             )
 
+    def list_invoices(self, struct_response: bool = True, **filters):
+        """Method to control response from request SELECT in database."""
+        logger.info("InvoiceService | list_invoices(): STARTED...")
+        response = invoice_manager.get_invoices(**filters)
+        if len(response) > 0:
+            if struct_response is True:
+                structured_data = self._struct_response(data=response)
+
+            logger.success("InvoiceService | list_invoices(): FINISHED")
+            return ResponseHandler.success(
+                body=structured_data,
+                status_code=200,
+                pagination={
+                    "total": len(response),
+                    "next": None,
+                    "previous": None,
+                    "total_pages": 1,
+                    "current_page": 1,
+                },
+            )
+
+        logger.success("InvoiceService | list_invoices(): FINISHED")
+        return ResponseHandler.success(
+            body=[],
+            status_code=200,
+            pagination={
+                "total": 0,
+                "next": None,
+                "previous": None,
+                "total_pages": 1,
+                "current_page": 1,
+            },
+        )
+
 
 invoice_service = InvoiceService()

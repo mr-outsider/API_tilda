@@ -843,3 +843,67 @@ diferentes. En este caso lo que se debe de hacer es el uso del cache. Para evita
 NOTA: No he podido implementarlo por falta de tiempo.
 
 ---
+
+[back to index](#indice)
+
+### Método: GET
+
+### URL: {{BASE_URL}}/v1/invoices
+
+### Query Params:
+- id (str): 9ddae72d-a9f3-40bb-b2a4-3de86fa403cb [Ejemplo]
+- estatus (str): MAGL070514HDFRMS09 [Ejemplo] - Opciones: pendiente, pagada vencida
+- id_estudiante (str): 9ddae72d-a9f3-40ds-b2a4-3de86fa403dsa [Ejemplo]
+
+
+### Body: N/A
+
+### **Response - Status Code: 200**
+
+
+```json
+{
+    "status": "success",
+    "pagination": {
+        "total": 2,
+        "next": null,
+        "previous": null,
+        "total_pages": 1,
+        "current_page": 1
+    },
+    "body": [
+        {
+            "id": "2db48953-a1de-4768-ac5f-c2f4122583e0",
+            "fecha_emision": "2025-07-01",
+            "fecha_vencimiento": "2025-07-31",
+            "concepto": "Pago mensualidad julio",
+            "monto": 1500.0,
+            "monto_pagado": 0.0,
+            "estatus": "pendiente",
+            "id_estudiante": "14f8e910-2737-4bb6-872f-810a21eb6511"
+        },
+        {
+            "id": "8f5be063-65cb-4113-995a-acdb8c46ae71",
+            "fecha_emision": "2025-07-02",
+            "fecha_vencimiento": "2025-07-31",
+            "concepto": "Pago mensualidad julio 2",
+            "monto": 1500.0,
+            "monto_pagado": 0.0,
+            "estatus": "pendiente",
+            "id_estudiante": "14f8e910-2737-4bb6-872f-810a21eb6511"
+        }
+    ]
+}
+```
+
+### **Response - Status Code: 400**
+Caso donde se usa una opción no válida para el filtro 'estatus'.
+
+```json
+{
+    "status": "error",
+    "error": "estatus 'pagados' is not a valid option. Please select a value in: ['pendiente', 'pagada', 'vencida']"
+}
+```
+
+---
