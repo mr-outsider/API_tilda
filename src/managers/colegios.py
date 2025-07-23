@@ -115,5 +115,42 @@ class SchoolManager:
             self.connection.close()
             return []
 
+    @manage_connection
+    def update_school(self, school_id: str, model_data: dict):
+        """Method to update a school by ID."""
+        logger.info("SchoolManager | update_school(): STARTED...")
+        try:
+            update_data = model_data.dict(exclude_unset=True)
+            if len(school_id) == 36:
+                filters = {"id": school_id}
+                result = (
+                    self.connection.query(ColegioModel)
+                    .filter_by(id=school_id)
+                    .update(update_data, synchronize_session=False)
+                )
+            else:
+                filters = {"clave_cct": school_id}
+                result = (
+                    self.connection.query(ColegioModel)
+                    .filter_by(clave_cct=school_id)
+                    .update(update_data, synchronize_session=False)
+                )
+
+            self.connection.commit()
+            if result == 0:
+                logger.warning(
+                    "SchoolManager | update_school() - No model was updated (possibly invalid ID)."
+                )
+                return []
+
+            result = self.get_schools(**filters)
+            logger.success("SchoolManager | update_school(): FINISHED")
+            return result
+        except Exception as e:
+            self.connection.rollback()
+            logger.error(f"SchoolManager | update_school(): ERROR - {e}")
+            self.connection.close()
+            return []
+
 
 school_manager = SchoolManager()

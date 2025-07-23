@@ -1,10 +1,11 @@
 from fastapi import APIRouter
 
 from config.settings import logger
-from schemas.colegios import AddColegioSchema, GetColegioFilters
+from schemas.colegios import AddColegioSchema, GetColegioFilters, UpdateColegioSchema
 from services.colegios import school_service
 from fastapi import Depends
 from utils.response import ResponseHandler
+
 
 router = APIRouter(prefix="/schools")
 
@@ -70,3 +71,22 @@ async def delete_colegion(id_colegio: str):
     response_school = school_service.delete_school(identificador=id_colegio)
     logger.success("Delete a school finished - STATUS: OK")
     return response_school
+
+
+@router.patch("/{id_colegio}")
+async def update_model(id_colegio: str, update_data: UpdateColegioSchema):
+    """Update a school from db.
+
+    Args:
+        id_colegio (str): Could be id in database or clave_cct
+    """
+    logger.info("Updating model in progress... - STATUS: STARTED")
+
+    data_to_update = {}
+    for field, value in update_data.dict(exclude_unset=True).items():
+        data_to_update[field] = value
+
+    response = school_service.update_school(identificador=id_colegio, data=update_data)
+    logger.success("Updating model finished - STATUS: FINISHED")
+
+    return response

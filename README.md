@@ -433,3 +433,82 @@ Caso donde el registro ya fue eliminado o no se encontró en la base de datos.
     "error": "School 'CCT1234567890' was not deleted! Please check if the register exist."
 }
 ```
+
+---
+
+[back to index](#indice)
+
+### Método: PATCH
+
+### URL: {{BASE_URL}}/v1/schools/{{identificador}}
+
+- identificador (str): Puede ser el uuid o la clave_cct de la escuela en cuestión.
+
+### Query Params: N/A
+
+### Body:
+```json
+{
+    "nombre": "Name", #Optional [str]
+    "calle": "Street", # Optional [str]
+    "colonia": "Neighboor", # Optional [str]
+    "municipio": "Municipality", # Optional [str]
+    "estado": "State", # Optional [str]
+    "codigo_postal": "Postal Code", # Optional [str]
+    "latitud": "Latitude", # Optional [float]
+    "longitud": "Longitude", # Optional [float]
+    "telefono": "Phone", # Optional [str]
+    "correo_electronico": "Email", # Optional [str]
+    "nombre_director": "Director Name", # Optional [str]
+    "turno": "Mixto", # Optional [str] Valid Options: "Matutino", "Vespertino", "Mixto".
+    "estatus": "cerrada", # Optional [str] Valid Options: "activa", "suspendida", "cerrada".
+
+}
+
+```
+
+### **Response - Status Code: 200**
+
+
+```json
+{
+    "status": "success",
+    "pagination": {
+        "total": 1,
+        "next": null,
+        "previous": null,
+        "total_pages": 1,
+        "current_page": 1
+    },
+    "body": [
+        {
+            "id": "620fd39c-fb19-420f-a9c6-c05a1f4247d7",
+            "clave_cct": "CCT1234567890",
+            "nombre": "Instituto Educativo Del Valle",
+            "nivel_educativo": "Primaria",
+            "calle": "Av. Siempre Viva 742",
+            "colonia": "Centro",
+            "municipio": "Cuernavaca",
+            "estado": "Morelos",
+            "codigo_postal": "62000",
+            "latitud": 18.918972,
+            "longitud": -99.234123,
+            "telefono": "7771234567",
+            "correo_electronico": "contacto@institutovalle.edu.mx",
+            "nombre_director": "María López Hernández",
+            "turno": "Mixto",
+            "estatus": "cerrada"
+        }
+    ]
+}
+```
+
+### **Response - Status Code: 400**
+Caso donde el registro no fue encontrado en la base de datos.
+
+```json
+{
+    "status": "error",
+    "error": "School 'CCT12345678900' does not exist!"
+}
+```
