@@ -1,0 +1,80 @@
+from managers.estudiantes import student_manager
+
+from config.settings import logger
+
+from schemas.estudiantes import AddEstudianteSchema
+from utils.response import ResponseHandler
+
+
+class StudentService:
+    """Class to struct responses from database."""
+
+    def _struct_response(self, data):
+        """Method to struct the data."""
+        logger.info("StudentService | _struct_response(): STARTED...")
+        response_list = []
+        for item in data:
+            info_structured = {
+                "id": item.id,
+                "nombre": item.nombre,
+                "apellido_paterno": item.apellido_paterno,
+                "apellido_materno": item.apellido_materno,
+                "fecha_nacimiento": item.fecha_nacimiento.isoformat()
+                if item.fecha_nacimiento
+                else None,
+                "genero": item.genero,
+                "curp": item.curp,
+                "fecha_inscripcion": item.fecha_inscripcion.isoformat()
+                if item.fecha_inscripcion
+                else None,
+                "grado_escolar": item.grado_escolar,
+                "especialidad": item.especialidad,
+                "promedio_general": float(item.promedio_general)
+                if item.promedio_general is not None
+                else None,
+                "carrera": item.carrera,
+                "id_escuela": item.id_escuela,
+            }
+
+            response_list.append(info_structured)
+
+        logger.success("StudentService | _struct_response(): FINISHED")
+        return response_list
+
+    def create_new_student(self, data: AddEstudianteSchema):
+        """Method to control flow during insert to db."""
+        logger.info("StudentService | create_new_student(): STARTED...")
+        curp = data.curp
+        filters = {"curp": curp}
+        response = student_manager.get_students(**filters)
+        if len(response) > 0:
+            return ResponseHandler.error(
+                message=f"Student '{curp}' already exist!", status_code=400
+            )
+
+        response = student_manager.insert_new_student(model_data=data)
+
+        logger.success("StudentService | create_new_student(): FINISHED")
+        if len(response) > 0:
+            structured_data = self._struct_response(data=response)
+
+            return ResponseHandler.success(
+                body=structured_data,
+                status_code=201,
+                pagination={
+                    "total": len(response),
+                    "next": None,
+                    "previous": None,
+                    "total_pages": 1,
+                    "current_page": 1,
+                },
+            )
+
+        else:
+            return ResponseHandler.error(
+                message=f"New student '{curp}' was not created! Please retry...",
+                status_code=400,
+            )
+
+
+student_service = StudentService()
