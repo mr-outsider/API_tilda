@@ -950,3 +950,74 @@ Caso donde el registro ya fue eliminado o no se encontró en la base de datos.
 ```
 
 ---
+
+[back to index](#indice)
+
+### Método: PATCH
+
+### URL: {{BASE_URL}}/v1/invoices/{{identificador}}
+
+- identificador (str): Es el uuid de la factura en cuestión.
+
+### Query Params: N/A
+
+### Body:
+```json
+
+{
+    "fecha_emision": "2025-07-10", # Optional [date] YYYY-MM-DD
+    "estatus": "vencida", # Optional [str] - Options: pendiente, pagada, vencida
+    "monto_pagado": 200, # Optional [float]
+    "concepto": "pruebas" # Optional [str]
+}
+
+```
+
+### **Response - Status Code: 200**
+
+
+```json
+{
+    "status": "success",
+    "pagination": {
+        "total": 1,
+        "next": null,
+        "previous": null,
+        "total_pages": 1,
+        "current_page": 1
+    },
+    "body": [
+        {
+            "id": "2db48953-a1de-4768-ac5f-c2f4122583e0",
+            "fecha_emision": "2025-07-10",
+            "fecha_vencimiento": "2025-07-31",
+            "concepto": "pruebas",
+            "monto": 1500.0,
+            "monto_pagado": 200.0,
+            "estatus": "vencida",
+            "id_estudiante": "14f8e910-2737-4bb6-872f-810a21eb6511"
+        }
+    ]
+}
+```
+
+### **Response - Status Code: 400**
+Caso donde el monto_pagado es mayor al monto de la factura.
+
+```json
+{
+    "status": "error",
+    "error": "monto_pagado [2000.0] is greater than monto_total [1500.00]"
+}
+```
+
+### **Response - Status Code: 400**
+Caso donde el identificador del estudiante no es válido.
+
+```json
+{
+    "status": "error",
+    "error": "Invoice '2db48953-a1de-4768-ac5f-c2f4122583e1' does not exist!"
+}
+```
+---

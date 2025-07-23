@@ -2,7 +2,7 @@ from managers.facturas import invoice_manager
 
 from config.settings import logger
 
-from schemas.facturas import AddFacturaSchema
+from schemas.facturas import AddFacturaSchema, UpdateFacturaSchema
 from utils.response import ResponseHandler
 
 
@@ -122,6 +122,52 @@ class InvoiceService:
                 "total_pages": 1,
                 "current_page": 1,
             },
+        )
+
+    def update_invoice(self, identificador: str, data: UpdateFacturaSchema):
+        """Method to control flow during update."""
+        logger.info("InvoiceService | update_invoice(): STARTED...")
+        if len(identificador) == 36:
+            filters = {"id": identificador}
+
+        response = invoice_manager.get_invoices(**filters)
+        if len(response) == 0:
+            return ResponseHandler.error(
+                message=f"Invoice '{identificador}' does not exist!",
+                status_code=400,
+            )
+
+        if data.monto_pagado is not None:
+            monto_total = response[0].monto
+            if data.monto_pagado > monto_total:
+                return ResponseHandler.error(
+                    message=f"monto_pagado [{data.monto_pagado}] is greater than monto_total [{monto_total}]",
+                    status_code=400,
+                )
+
+        response = invoice_manager.update_invoice(
+            invoice_id=identificador, model_data=data
+        )
+
+        if len(response) > 0:
+            structured_data = self._struct_response(data=response)
+
+            logger.success("InvoiceService | update_invoice(): FINISHED")
+            return ResponseHandler.success(
+                body=structured_data,
+                status_code=200,
+                pagination={
+                    "total": len(response),
+                    "next": None,
+                    "previous": None,
+                    "total_pages": 1,
+                    "current_page": 1,
+                },
+            )
+
+        return ResponseHandler.error(
+            message=f"Invoice '{identificador}' was not updated! Please check if the register exist.",
+            status_code=400,
         )
 
 

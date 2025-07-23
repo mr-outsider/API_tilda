@@ -87,5 +87,34 @@ class InvoiceManager:
             self.connection.close()
             return []
 
+    @manage_connection
+    def update_invoice(self, invoice_id: str, model_data: dict):
+        """Method to update a invoice by ID."""
+        logger.info("InvoiceManager | update_invoice(): STARTED...")
+        try:
+            update_data = model_data.dict(exclude_unset=True)
+            filters = {"id": invoice_id}
+            result = (
+                self.connection.query(FacturaModel)
+                .filter_by(id=invoice_id)
+                .update(update_data, synchronize_session=False)
+            )
+
+            self.connection.commit()
+            if result == 0:
+                logger.warning(
+                    "InvoiceManager | update_invoice() - No model was updated (possibly invalid ID)."
+                )
+                return []
+
+            result = self.get_invoices(**filters)
+            logger.success("InvoiceManager | update_invoice(): FINISHED")
+            return result
+        except Exception as e:
+            self.connection.rollback()
+            logger.error(f"InvoiceManager | update_invoice(): ERROR - {e}")
+            self.connection.close()
+            return []
+
 
 invoice_manager = InvoiceManager()
