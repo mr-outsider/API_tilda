@@ -70,7 +70,7 @@ class StudentManager:
     @manage_connection
     def delete_student(self, **filters):
         """Method to delete a student by ID."""
-        logger.info("SchoolManager | delete_student(): STARTED...")
+        logger.info("StudentManager | delete_student(): STARTED...")
         id_obj = filters.pop("id", None)
         curp = filters.pop("curp", None)
 
@@ -86,17 +86,54 @@ class StudentManager:
 
             if not student:
                 logger.warning(
-                    f"SchoolManager | delete_student(): Student with ID {id_obj}|{curp} not found."
+                    f"StudentManager | delete_student(): Student with ID {id_obj}|{curp} not found."
                 )
                 return []
 
             self.connection.delete(student)
             self.connection.commit()
-            logger.success("SchoolManager | delete_student(): FINISHED")
+            logger.success("StudentManager | delete_student(): FINISHED")
             return [student]
         except Exception as e:
             self.connection.rollback()
-            logger.error(f"SchoolManager | delete_student(): ERROR - {e}")
+            logger.error(f"StudentManager | delete_student(): ERROR - {e}")
+            self.connection.close()
+            return []
+
+    @manage_connection
+    def update_student(self, student_id: str, model_data: dict):
+        """Method to update a student by ID."""
+        logger.info("StudentManager | update_student(): STARTED...")
+        try:
+            update_data = model_data.dict(exclude_unset=True)
+            if len(student_id) == 36:
+                filters = {"id": student_id}
+                result = (
+                    self.connection.query(EstudianteModel)
+                    .filter_by(id=student_id)
+                    .update(update_data, synchronize_session=False)
+                )
+            else:
+                filters = {"curp": student_id}
+                result = (
+                    self.connection.query(EstudianteModel)
+                    .filter_by(curp=student_id)
+                    .update(update_data, synchronize_session=False)
+                )
+
+            self.connection.commit()
+            if result == 0:
+                logger.warning(
+                    "StudentManager | update_student() - No model was updated (possibly invalid ID)."
+                )
+                return []
+
+            result = self.get_students(**filters)
+            logger.success("StudentManager | update_student(): FINISHED")
+            return result
+        except Exception as e:
+            self.connection.rollback()
+            logger.error(f"StudentManager | update_student(): ERROR - {e}")
             self.connection.close()
             return []
 

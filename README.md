@@ -702,3 +702,81 @@ Caso donde el registro ya fue eliminado o no se encontró en la base de datos.
     "error": "Student '2a353798-f153-4a08-9325-e98d4e138b42' was not deleted! Please check if the register exist."
 }
 ```
+
+---
+
+[back to index](#indice)
+
+### Método: PATCH
+
+### URL: {{BASE_URL}}/v1/students/{{identificador}}
+
+- identificador (str): Puede ser el uuid o la curp del estudiante en cuestión.
+
+### Query Params: N/A
+
+### Body:
+```json
+
+{
+    "grado_escolar": "6to semestre", #Optional [str]
+    "especialidad": "Ciencias", #Optional [str]
+    "promedio_general": 8.9, #Optional [float]
+    "carrera": "Ciencias de computación" #Optional [str]
+    "id_escuela": "620fd39c-fb19-420f-a9c6-c05a1f4247d7" #Optional [str]
+}
+
+```
+
+### **Response - Status Code: 200**
+
+
+```json
+{
+    "status": "success",
+    "pagination": {
+        "total": 1,
+        "next": null,
+        "previous": null,
+        "total_pages": 1,
+        "current_page": 1
+    },
+    "body": [
+        {
+            "id": "14f8e910-2737-4bb6-872f-810a21eb6511",
+            "nombre": "Luis",
+            "apellido_paterno": "Martínez",
+            "apellido_materno": "Gómez",
+            "fecha_nacimiento": "2007-05-14",
+            "genero": "masculino",
+            "curp": "MAGL070514HDFRMS09",
+            "fecha_inscripcion": "2023-08-21",
+            "grado_escolar": "6to semestre",
+            "especialidad": "Ciencias",
+            "promedio_general": 8.9,
+            "carrera": "Ciencias de computación",
+            "id_escuela": "620fd39c-fb19-420f-a9c6-c05a1f4247d7"
+        }
+    ]
+}
+```
+
+### **Response - Status Code: 400**
+Caso donde el registro no fue encontrado en la base de datos.
+
+```json
+{
+    "status": "error",
+    "error": "Student 'MAGL070514HDFRMS01' does not exist!"
+}
+```
+
+### **Response - Status Code: 400**
+Caso donde el identificador del estudiante no es válido.
+
+```json
+{
+    "status": "error",
+    "error": "length student id 'MAGL070514HDFRMS011' is not valid!"
+}
+```
