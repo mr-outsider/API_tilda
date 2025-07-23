@@ -17,6 +17,7 @@ class StudentManager:
 
         id_obj = filters.pop("id", None)
         curp = filters.pop("curp", None)
+        id_escuela = filters.pop("id_escuela", None)
 
         try:
             query = self.connection.query(EstudianteModel)
@@ -24,6 +25,8 @@ class StudentManager:
                 query = query.filter(EstudianteModel.id == id_obj)
             if curp:
                 query = query.filter(EstudianteModel.curp == curp)
+            if id_escuela:
+                query = query.filter(EstudianteModel.id_escuela == id_escuela)
 
             logger.success("StudentManager | get_students(): FINISHED")
             return query.all()

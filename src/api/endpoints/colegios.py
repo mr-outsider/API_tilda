@@ -9,6 +9,7 @@ from fastapi import Depends
 from utils.response import ResponseHandler
 import json
 
+
 router = APIRouter(prefix="/schools")
 
 
@@ -28,6 +29,7 @@ async def add_colegio(colegio: AddColegioSchema):
 async def get_colegios(filters: GetColegioFilters = Depends()):
     """List all colegios from database"""
     logger.info("Getting colegios in progress... - STATUS: STARTED")
+
     filter_dict = {k: v for k, v in filters.dict().items() if v is not None}
 
     if "nivel_educativo" in filter_dict:
