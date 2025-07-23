@@ -110,5 +110,36 @@ class StudentService:
             },
         )
 
+    def delete_student(self, identificador: str):
+        """Method to control flow during delete from db."""
+        logger.info("StudentService | delete_school(): STARTED...")
+
+        if len(identificador) == 36:
+            filters = {"id": identificador}
+        elif len(identificador) <= 18:
+            filters = {"curp": identificador}
+
+        response = student_manager.delete_student(**filters)
+        if len(response) == 0:
+            return ResponseHandler.error(
+                message=f"Student '{identificador}' was not deleted! Please check if the register exist.",
+                status_code=400,
+            )
+
+        logger.success("StudentService | delete_school(): FINISHED")
+
+        return ResponseHandler.success(
+            message=f"Student '{identificador}' deleted OK!",
+            body=[],
+            status_code=200,
+            pagination={
+                "total": len(response),
+                "next": None,
+                "previous": None,
+                "total_pages": 1,
+                "current_page": 1,
+            },
+        )
+
 
 student_service = StudentService()
