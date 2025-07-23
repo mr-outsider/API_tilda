@@ -33,3 +33,19 @@ class GetColegioFilters(BaseModel):
     turno: Optional[str] = Query(None)
     estatus: Optional[str] = Query(None)
     correo_electronico: Optional[str] = Query(None)
+
+
+class UpdateColegioSchema(BaseModel):
+    nombre: Optional[constr(max_length=255)] = None
+    calle: Optional[constr(max_length=255)] = None
+    colonia: Optional[constr(max_length=255)] = None
+    municipio: Optional[constr(max_length=100)] = None
+    estado: Optional[constr(max_length=100)] = None
+    codigo_postal: Optional[constr(max_length=10)] = None
+    latitud: Optional[float] = None
+    longitud: Optional[float] = None
+    telefono: Optional[constr(max_length=20)] = None
+    correo_electronico: Optional[EmailStr] = None
+    nombre_director: Optional[constr(max_length=255)] = None
+    turno: Optional[Literal["Matutino", "Vespertino", "Mixto"]] = None
+    estatus: Optional[Literal["activa", "suspendida", "cerrada"]] = None
