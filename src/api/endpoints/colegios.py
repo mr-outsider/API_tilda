@@ -78,7 +78,7 @@ async def delete_colegion(id_colegio: str):
 
 
 @router.patch("/{id_colegio}")
-async def update_model(id_colegio: str, update_data: UpdateColegioSchema):
+async def update_colegio(id_colegio: str, update_data: UpdateColegioSchema):
     """Update a school from db.
 
     Args:
@@ -98,7 +98,7 @@ async def update_model(id_colegio: str, update_data: UpdateColegioSchema):
 
 # Student
 @router.post("/{id_colegio}/student")
-async def add_students(id_colegio: str, datos_estudiante: AddEstudianteSchema):
+async def add_estudiante(id_colegio: str, datos_estudiante: AddEstudianteSchema):
     """add a student linked to school.
 
     Args:

@@ -101,7 +101,7 @@ class SchoolManager:
 
             if not school:
                 logger.warning(
-                    f"SchoolManager | delete_school(): School with ID {id_obj} not found."
+                    f"SchoolManager | delete_school(): School with ID {id_obj}|{clave_cct} not found."
                 )
                 return []
 

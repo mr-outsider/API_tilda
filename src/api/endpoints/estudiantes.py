@@ -13,7 +13,7 @@ router = APIRouter(prefix="/students")
 @router.get(
     "",
 )
-async def get_students(filters: GetEstudianteFilters = Depends()):
+async def get_estudiante(filters: GetEstudianteFilters = Depends()):
     """List all students from database"""
     logger.info("Getting students in progress... - STATUS: STARTED")
 
@@ -31,3 +31,16 @@ async def get_students(filters: GetEstudianteFilters = Depends()):
     response = student_service.list_students(**filter_dict)
     logger.success("Getting students finished - STATUS: OK")
     return response
+
+
+@router.delete("/{id_estudiante}")
+async def delete_estudiante(id_estudiante: str):
+    """Delete a  from db.
+
+    Args:
+        id_estudiante (str): Could be id in database or curp
+    """
+    logger.info("Delete a student in progress... - STATUS: STARTED")
+    response_student = student_service.delete_student(identificador=id_estudiante)
+    logger.success("Delete a student finished - STATUS: OK")
+    return response_student

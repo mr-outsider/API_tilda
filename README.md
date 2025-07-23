@@ -5,6 +5,7 @@
 - [Vista General](#vista_general)
 - [¿Cómo correr este proyecto?](#run_project)
 - [Creación del diagrama ER](#er)
+- - [Notas sobre el diagrama ER](#notesER)
 - [Consumir endpoints](#endpoints)
 - -  [Health Check Endpoint](#health)
 - - [Colegio](#school)
@@ -206,13 +207,17 @@ TODO: Generar un script para crear las tablas y cargar información de prueba.
 
 ![Registro de conexión.](img_docs/Diagrama_ER_mattilda.png)
 
-### Notas sobre el diseño del diagrama ER de la base de datos
+
+<h2 id="notesER">Notas sobre el diseño del diagrama ER de la base de datos</h2>
+
+[back to index](#indice)
 
 - Se ha elegido utilizar un id del tipo UUID4 como primary key en lugar de un tipo INT autoincremental, con la finalidad de mitigar un posible ataque Insecure Direct Object Reference ([IDOR | CWE-639](https://cwe.mitre.org/data/definitions/639.html)) al momento de consultar los registros mediante la API.
 - Se ha añadido una cuarta tabla (pagos) además de las principales, esto con la finalidad de permitir al estudiante los pagos parciales hacía sus facturas.
 - Notese que los datos útilizados en la tabla pagos, son los minimos necesarios para emitir el Comprobante Electrónico de Pago en México (CEP).
 ![Rastreo banco de méxico.](img_docs/banco_mex_rastreo.png)
-
+- Se ha obtado por añadir la tabla (pagos) para que con los datos, la persona interesada pueda obtener el CEP directamente en el Banco de México. Esto con la finalidad de evitar cargar
+documentos y mitigar una posible vulnerabilidad: Local File Inclusion ([LFI | CWE-98](https://cwe.mitre.org/data/definitions/98.html))
 
 <h1 id="endpoints">Consumir endpoints</h1>
 
@@ -656,3 +661,44 @@ Caso donde no se encuentra el registro con los filtros útilizados.
 ```
 
 ---
+
+[back to index](#indice)
+
+### Método: DELETE
+
+### URL: {{BASE_URL}}/v1/students/{{identificador}}
+
+- identificador (str): Puede ser el uuid o la curp del estudiante en cuestión.
+
+### Query Params: N/A
+
+
+### Body: N/A
+
+### **Response - Status Code: 200**
+
+
+```json
+{
+    "status": "success",
+    "message": "Student '2a353798-f153-4a08-9325-e98d4e138b42' deleted OK!",
+    "pagination": {
+        "total": 1,
+        "next": null,
+        "previous": null,
+        "total_pages": 1,
+        "current_page": 1
+    },
+    "body": []
+}
+```
+
+### **Response - Status Code: 400**
+Caso donde el registro ya fue eliminado o no se encontró en la base de datos.
+
+```json
+{
+    "status": "error",
+    "error": "Student '2a353798-f153-4a08-9325-e98d4e138b42' was not deleted! Please check if the register exist."
+}
+```

@@ -67,5 +67,38 @@ class StudentManager:
             self.connection.close()
             return []
 
+    @manage_connection
+    def delete_student(self, **filters):
+        """Method to delete a student by ID."""
+        logger.info("SchoolManager | delete_student(): STARTED...")
+        id_obj = filters.pop("id", None)
+        curp = filters.pop("curp", None)
+
+        try:
+            if id_obj:
+                student = (
+                    self.connection.query(EstudianteModel).filter_by(id=id_obj).first()
+                )
+            if curp:
+                student = (
+                    self.connection.query(EstudianteModel).filter_by(curp=curp).first()
+                )
+
+            if not student:
+                logger.warning(
+                    f"SchoolManager | delete_student(): Student with ID {id_obj}|{curp} not found."
+                )
+                return []
+
+            self.connection.delete(student)
+            self.connection.commit()
+            logger.success("SchoolManager | delete_student(): FINISHED")
+            return [student]
+        except Exception as e:
+            self.connection.rollback()
+            logger.error(f"SchoolManager | delete_student(): ERROR - {e}")
+            self.connection.close()
+            return []
+
 
 student_manager = StudentManager()
