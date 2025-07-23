@@ -214,6 +214,7 @@ TODO: Generar un script para crear las tablas y cargar información de prueba.
 
 
 <h1 id="endpoints">Consumir endpoints</h1>
+
 [back to index](#indice)
 
 
@@ -228,6 +229,8 @@ cómo consumir el servicio y qué podemos esperar en las respuestas.
 ### Método: GET
 
 ### URL: {{BASE_URL}}/health-check
+
+### Query Params: N/A
 
 ### Body: N/A
 
@@ -245,11 +248,17 @@ cómo consumir el servicio y qué podemos esperar en las respuestas.
     "status": "Bad response - Connection Fail"
 }
 ```
+---
+
 <h2 id="school">Colegio</h2>
 
-### Método: Post
+[back to index](#indice)
+
+### Método: POST
 
 ### URL: {{BASE_URL}}/v1/schools
+
+### Query Params: N/A
 
 ### Body
 
@@ -317,3 +326,67 @@ Caso donde el registro ya se encuentra en la base de datos.
     "error": "School 'CCT1234567890' already exist!"
 }
 ```
+---
+
+[back to index](#indice)
+### Método: GET
+
+### URL: {{BASE_URL}}/v1/schools
+
+### Query Params:
+- clave_cct (str): CCT1234567890 [Ejemplo]
+- nombre (str): Montesori [Ejemplo]
+- nivel_educativo (str): Universidad [Ejemplo] - Opciones: Preescolar, Primaria, Secundaria, Universidad.
+- turno (str): Matutino [Ejemplo] - Opciones: Matutino,Vespertino, Mixto.
+- estatus (str): activa [Ejemplo] - Opciones: activa, suspendida, cerrada.
+- correo_electronico (str): school@email.com [Ejemplo]
+
+
+### Body: N/A
+
+### **Response - Status Code: 200**
+
+
+```json
+{
+    "status": "success",
+    "pagination": {
+        "total": 1,
+        "next": null,
+        "previous": null,
+        "total_pages": 1,
+        "current_page": 1
+    },
+    "body": [
+        {
+            "id": "8c20fe9c-7cd1-4768-a44a-74a022e6ec14",
+            "clave_cct": "CCT1234567890",
+            "nombre": "Instituto Educativo del Valle",
+            "nivel_educativo": "Primaria",
+            "calle": "Av. Siempre Viva 742",
+            "colonia": "Centro",
+            "municipio": "Cuernavaca",
+            "estado": "Morelos",
+            "codigo_postal": "62000",
+            "latitud": 18.918972,
+            "longitud": -99.234123,
+            "telefono": "7771234567",
+            "correo_electronico": "contacto@institutovalle.edu.mx",
+            "nombre_director": "María López Hernández",
+            "turno": "Matutino",
+            "estatus": "activa"
+        }
+    ]
+}
+```
+
+### **Response - Status Code: 400**
+Caso donde se usa una opción no válida en uno de los filtros.
+
+```json
+{
+    "status": "error",
+    "error": "nivel_educativo 'Kinder' is not a valid option. Please select a value in: ['Preescolar', 'Primaria', 'Secundaria', 'Universidad']"
+}
+```
+---
