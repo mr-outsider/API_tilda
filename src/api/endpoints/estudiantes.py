@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from config.settings import logger
-from schemas.estudiantes import GetEstudianteFilters
+from schemas.estudiantes import GetEstudianteFilters, UpdateEstudianteSchema
 from fastapi import Depends
 from utils.response import ResponseHandler
 from services.estudiantes import student_service
@@ -40,7 +40,37 @@ async def delete_estudiante(id_estudiante: str):
     Args:
         id_estudiante (str): Could be id in database or curp
     """
+    if len(id_estudiante) != 36 and len(id_estudiante) > 18:
+        return ResponseHandler.error(
+            message=f"length student id '{id_estudiante}' is not valid!", status_code=400
+        )
+
     logger.info("Delete a student in progress... - STATUS: STARTED")
     response_student = student_service.delete_student(identificador=id_estudiante)
     logger.success("Delete a student finished - STATUS: OK")
     return response_student
+
+
+@router.patch("/{id_estudiante}")
+async def update_colegio(id_estudiante: str, update_data: UpdateEstudianteSchema):
+    """Update a student from db.
+
+    Args:
+        id_estudiante (str): Could be id in database or curp
+    """
+    if len(id_estudiante) != 36 and len(id_estudiante) > 18:
+        return ResponseHandler.error(
+            message=f"length student id '{id_estudiante}' is not valid!", status_code=400
+        )
+    logger.info("Updating model in progress... - STATUS: STARTED")
+
+    data_to_update = {}
+    for field, value in update_data.dict(exclude_unset=True).items():
+        data_to_update[field] = value
+
+    response = student_service.update_student(
+        identificador=id_estudiante, data=update_data
+    )
+    logger.success("Updating model finished - STATUS: FINISHED")
+
+    return response

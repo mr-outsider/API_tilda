@@ -26,3 +26,11 @@ class GetEstudianteFilters(BaseModel):
     curp: Optional[str] = Query(None, max_length=18)
     genero: Optional[str] = Query(None, max_length=20)
     id_escuela: Optional[str] = Query(None)
+
+
+class UpdateEstudianteSchema(BaseModel):
+    grado_escolar: Optional[constr(max_length=50)] = None
+    especialidad: Optional[constr(max_length=255)] = None
+    promedio_general: Optional[float] = None
+    carrera: Optional[constr(max_length=150)] = None
+    id_escuela: Optional[str] = None

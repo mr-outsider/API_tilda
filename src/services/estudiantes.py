@@ -2,7 +2,7 @@ from managers.estudiantes import student_manager
 
 from config.settings import logger
 
-from schemas.estudiantes import AddEstudianteSchema
+from schemas.estudiantes import AddEstudianteSchema, UpdateEstudianteSchema
 from utils.response import ResponseHandler
 
 
@@ -139,6 +139,46 @@ class StudentService:
                 "total_pages": 1,
                 "current_page": 1,
             },
+        )
+
+    def update_student(self, identificador: str, data: UpdateEstudianteSchema):
+        """Method to control flow during update."""
+        logger.info("StudentService | update_student(): STARTED...")
+        if len(identificador) == 36:
+            student_id = identificador
+            filters = {"id": identificador}
+        elif len(identificador) <= 18:
+            student_id = identificador
+            filters = {"curp": identificador}
+
+        response = student_manager.get_students(**filters)
+        if len(response) == 0:
+            return ResponseHandler.error(
+                message=f"Student '{identificador}' does not exist!",
+                status_code=400,
+            )
+
+        response = student_manager.update_student(student_id=student_id, model_data=data)
+
+        if len(response) > 0:
+            structured_data = self._struct_response(data=response)
+
+            logger.success("StudentService | update_student(): FINISHED")
+            return ResponseHandler.success(
+                body=structured_data,
+                status_code=200,
+                pagination={
+                    "total": len(response),
+                    "next": None,
+                    "previous": None,
+                    "total_pages": 1,
+                    "current_page": 1,
+                },
+            )
+
+        return ResponseHandler.error(
+            message=f"Student '{identificador}' was not updated! Please check if the register exist.",
+            status_code=400,
         )
 
 
