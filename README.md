@@ -235,7 +235,7 @@ Para probar en local:
 **BASE_URL = localhost:8000**
 
 Para probar online:
-**BASE_URL = http://35.90.254.65**
+**BASE_URL = http://35.89.147.184**
 
 <h2 id="health">Health Check Endpoint</h2>
 
