@@ -11,7 +11,10 @@
 - - [Colegio](#school)
 - - [Estudiantes](#students)
 - - [Facturas](#invoices)
-
+- [Anexo](#anexo)
+- - [Ejecución de linting](#linting)
+- - [Ejecución de pruebas unitarias](#test)
+- - [Pendientes en el desarrollo y mejoras](#pending)
 
 <h1 id="fin">Vista General</h1>
 
@@ -1024,3 +1027,51 @@ Caso donde el identificador del estudiante no es válido.
 }
 ```
 ---
+
+<h1 id="anexo">Anexo</h1>
+
+[back to index](#indice)
+
+<h2 id="linting">Ejecución del linting</h2>
+
+```bash
+pre-commit run --all-files
+```
+![Linting.](img_docs/linting.png
+)
+
+<h2 id="test">Ejecución de test unitarios</h2>
+
+```bash
+
+poetry run pytest
+
+# Para ejecutar test y coverage
+poetry run pytest --cov=src
+```
+
+![Testing.](img_docs/testing.png
+)
+
+<h2 id="pending">Pendientes en el desarrollo y mejoras</h2>
+
+[back to index](#indice)
+
+
+- Implementación de CRUD para la tabla de pagos.
+- Endpoint Estado de Cuenta Colegio: Utilizar una lógica similar al GET, pero filtrando a partir de la tabla facturas mediante un join. Apartir de las facturas, obtener los estudiantes de una escuela determinada.
+- Endpoint Estado de Cuenta del Estudiante: Filtrado mediante ID del estudiante, sumar los montos de las facturas y restar la suma de los abonos de las facturas.
+- Obtener más información haciendo uso de la tabla pagos, la tabla que fue añadida para llevar un control de los pagos parciales que realiza el estudiante.
+- Más filtros en los endpoints GET.
+- Añadir más test unitarios.
+- Añadir pruebas de estres.
+- Realizar pruebas de seguridad OWASP TOP 10 para API.
+- Implementación de un gestor de errores como Sentry.
+- Mejorar la documentación generada por Swagger.
+- Archivo Make para automatizar el levantamiento del proyecto y reducir algunos pasos manuales.
+- Mejorar la corrida de test para ejecutar mediante archivo MAKE.
+- Mejorar el manejo de errores para estandarizar la respuesta de errores.
+- Script para cargar datos de prueba en la BD.
+- Implementar la paginación.
+- Implementar uso de Caché.
+- Subir el coverage al menos a un 85%.
